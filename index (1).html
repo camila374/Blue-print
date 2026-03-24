@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blueprint de Vendas — Natural</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--o:#F47B20;--od:#D4640E;--ol:#FEF0E6;--om:#FAD4B2;
+--n:#1A2E4A;--nm:#2C4870;--nl:#E8EDF5;
+--w:#fff;--off:#FDFAF6;--bor:#E4E4E0;
+--t:#1A2E4A;--tm:#4A5568;--tl:#8A909A;
+--g:#2E7D4F;--gl:#E8F5EE;--r:#C0392B;
+--rad:16px;--radl:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;color:var(--t);line-height:1.6;background:var(--w)}
+h1,h2,h3,h4,h5,h6{font-family:'Nunito',sans-serif}
+
+/* Progress */
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--o),var(--od));z-index:9999;width:0%;transition:width .1s;pointer-events:none}
+
+/* Presentation bar */
+.pbar{position:fixed;top:0;left:0;right:0;z-index:500;background:linear-gradient(135deg,var(--o),var(--od));height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;gap:8px}
+.pbar span{color:#fff;font-size:.82rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.pbar svg{fill:#fff;width:16px;height:16px}
+body.pmode .pbar,body.pmode nav,body.pmode footer{display:none}
+body.pmode .hero{margin-top:0}
+.pexit{position:fixed;top:14px;right:14px;z-index:600;display:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 16px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;backdrop-filter:blur(10px);transition:opacity .3s;opacity:0}
+body.pmode .pexit{display:block}
+body.pmode:hover .pexit{opacity:1}
+
+/* Nav */
+nav{position:fixed;top:34px;left:0;right:0;z-index:400;background:rgba(26,46,74,.97);backdrop-filter:blur(20px);height:62px;border-bottom:2px solid var(--o);display:flex;align-items:center;padding:0 2rem}
+.nlogo{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;color:#fff;white-space:nowrap}
+.nlogo span{color:var(--o)}
+.nlinks{display:flex;gap:4px;margin-left:auto}
+.nlinks a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.78rem;font-weight:700;padding:6px 14px;border-radius:8px;transition:all .2s;cursor:pointer;white-space:nowrap}
+.nlinks a:hover{color:#fff;background:rgba(244,123,32,.1)}
+.nlinks a.on{color:#fff;background:rgba(244,123,32,.18);box-shadow:inset 0 -2px 0 var(--o)}
+
+/* Hero */
+.hero{margin-top:96px;background:var(--n);padding:5rem 3rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(244,123,32,.08) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;text-align:center}
+.hero h1{font-size:3.2rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:1rem}
+.hero h1 span{color:var(--o)}
+.hero .hsub{font-size:1.2rem;color:rgba(255,255,255,.75);max-width:700px;margin:0 auto 2.5rem}
+.hstats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.hstat{text-align:center}
+.hstat .num{font-family:'Nunito',sans-serif;font-size:2.8rem;font-weight:900;color:var(--o)}
+.hstat .lab{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:600}
+
+/* Ticker */
+.tick{background:linear-gradient(135deg,var(--o),var(--od));overflow:hidden;padding:14px 0;position:relative}
+.ticki{display:flex;gap:3rem;white-space:nowrap;animation:tk 40s linear infinite;width:max-content}
+.ticki span{color:#fff;font-weight:700;font-size:.9rem;opacity:.95}
+.ticki span::before{content:'★';margin-right:8px;opacity:.6}
+@keyframes tk{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tick::before,.tick::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.tick::before{left:0;background:linear-gradient(to right,var(--o),transparent)}
+.tick::after{right:0;background:linear-gradient(to left,var(--od),transparent)}
+
+/* Sections */
+section{padding:5rem 3rem}
+.salt{background:var(--off)}
+.snav{background:var(--n);color:#fff}
+.snav .stit,.snav h3,.snav h4,.snav p,.snav li{color:#fff}
+.snav .sdesc{color:rgba(255,255,255,.75)}
+.sinner{max-width:1100px;margin:0 auto}
+.seyb{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.seyb .bar{width:35px;height:3px;background:var(--o);border-radius:2px}
+.seyb .lab{font-size:.78rem;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:1.5px}
+.stit{font-size:2.2rem;font-weight:900;line-height:1.2;margin-bottom:.6rem}
+.sdesc{font-size:1.05rem;color:var(--tm);margin-bottom:2.5rem;max-width:750px}
+
+/* Cards */
+.card{background:#fff;border-radius:var(--rad);padding:1.8rem;border:1px solid var(--bor);transition:all .25s;box-shadow:0 4px 16px rgba(26,46,74,.07)}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(26,46,74,.12)}
+.step-card{border-top:3px solid var(--o)}
+.step-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:2.2rem;color:var(--o);margin-bottom:.3rem}
+.card h4{font-size:1.1rem;font-weight:800;margin-bottom:.5rem;color:var(--t)}
+.card p,.card li{font-size:.92rem;color:var(--tm);line-height:1.55}
+
+/* Dark card */
+.dcard{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rad);padding:1.8rem;transition:all .25s}
+.dcard:hover{transform:translateY(-3px);background:rgba(255,255,255,.1);box-shadow:0 12px 35px rgba(0,0,0,.15)}
+.dcard h4{color:#fff;font-size:1.1rem;font-weight:800;margin-bottom:.5rem}
+.dcard p,.dcard li{color:rgba(255,255,255,.8);font-size:.92rem;line-height:1.55}
+
+/* Grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.5rem}
+
+/* Accent box */
+.accent-box{background:linear-gradient(135deg,var(--o),#c55a0a);border-radius:var(--radl);padding:2.5rem 2.8rem;position:relative;overflow:hidden;color:#fff;margin-top:2rem}
+.accent-box::before{content:'';position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:rgba(255,255,255,.06);border-radius:50%}
+.accent-box h4{font-size:1.2rem;font-weight:800;margin-bottom:.5rem}
+.accent-box p{font-size:.95rem;opacity:.92;line-height:1.6}
+
+/* Script box */
+.script-box{background:var(--ol);border-left:4px solid var(--o);border-radius:0 var(--rad) var(--rad) 0;padding:1.5rem 1.8rem;margin:1rem 0}
+.script-box p{font-style:italic;font-size:1rem;color:var(--t);font-weight:600}
+.script-box .script-label{font-style:normal;font-size:.75rem;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem}
+
+/* Dark script box */
+.dscript-box{background:rgba(244,123,32,.12);border-left:4px solid var(--o);border-radius:0 var(--rad) var(--rad) 0;padding:1.5rem 1.8rem;margin:1rem 0}
+.dscript-box p{font-style:italic;font-size:1rem;color:#fff;font-weight:600}
+.dscript-box .script-label{font-style:normal;font-size:.75rem;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem}
+
+/* Alert/danger box */
+.danger-card{background:#FBDDDA;border:1px solid rgba(192,57,43,.35);border-radius:var(--rad);padding:1.5rem 1.8rem}
+.danger-card h4{color:var(--r);font-weight:800}
+.danger-card p{color:#6B2D24;font-size:.92rem}
+
+/* Golden rule box */
+.golden-rule{background:linear-gradient(135deg,var(--n),var(--nm));border:2px solid var(--o);border-radius:var(--radl);padding:2rem 2.5rem;text-align:center;margin:2rem 0}
+.golden-rule .gr-label{font-size:.78rem;font-weight:800;color:var(--o);text-transform:uppercase;letter-spacing:2px;margin-bottom:.5rem}
+.golden-rule p{color:#fff;font-size:1.1rem;font-weight:700;line-height:1.5}
+
+/* Table */
+.mtable{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--rad);overflow:hidden;border:2px solid var(--o);margin:1.5rem 0}
+.mtable th{background:var(--o);color:#fff;font-weight:800;padding:1rem 1.2rem;font-size:.9rem;text-align:left}
+.mtable td{padding:1rem 1.2rem;font-size:.88rem;color:var(--t);border-bottom:1px solid var(--bor);vertical-align:top}
+.mtable tr:last-child td{border-bottom:none}
+.mtable tr:nth-child(even) td{background:var(--off)}
+.mtable .highlight-row td{background:var(--ol);font-weight:700}
+
+/* Snav table */
+.snav .mtable td{color:rgba(255,255,255,.85);border-bottom-color:rgba(255,255,255,.1)}
+.snav .mtable tr:nth-child(even) td{background:rgba(255,255,255,.04)}
+.snav .mtable .highlight-row td{background:rgba(244,123,32,.15);color:#fff}
+
+/* Flow boxes */
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;margin:2rem 0}
+.flow-step{background:var(--n);border:2px solid var(--o);border-radius:var(--rad);padding:1.2rem 1.5rem;min-width:180px;text-align:center;position:relative}
+.flow-step h4{color:#fff;font-size:.95rem;font-weight:800;margin-bottom:.3rem}
+.flow-step p{color:rgba(255,255,255,.7);font-size:.78rem}
+.flow-arrow{color:var(--o);font-size:1.8rem;font-weight:900;padding:0 6px;flex-shrink:0}
+
+/* Decision tree */
+.dtree{display:flex;flex-direction:column;align-items:center;gap:1.2rem;margin:2rem 0}
+.dtree-q{background:var(--n);border:2px solid var(--o);border-radius:var(--rad);padding:1.2rem 2rem;text-align:center}
+.dtree-q p{color:#fff;font-weight:800;font-size:1.1rem}
+.dtree-branches{display:grid;grid-template-columns:1fr 1fr;gap:2rem;width:100%}
+.dtree-branch{border-radius:var(--rad);padding:1.8rem;border:1px solid rgba(255,255,255,.15)}
+.dtree-branch h4{font-weight:800;margin-bottom:.8rem;font-size:1.05rem}
+.dtree-branch p,.dtree-branch strong{color:rgba(255,255,255,.85)}
+.dtree-branch.yes{background:rgba(44,72,112,.6);border-color:rgba(255,255,255,.2)}
+.dtree-branch.yes h4{color:#fff}
+.dtree-branch.no{background:rgba(244,123,32,.12);border-color:var(--o)}
+.dtree-branch.no h4{color:var(--o)}
+.dtree-arrow{color:var(--o);font-size:1.5rem;font-weight:900}
+
+/* Spectrum */
+.spectrum{display:flex;align-items:center;gap:1rem;margin:1.5rem 0 2rem;padding:1rem 0}
+.spectrum-label{font-weight:800;font-size:.85rem;white-space:nowrap}
+.spectrum-bar{flex:1;height:8px;background:linear-gradient(to right,var(--n),var(--o));border-radius:4px;position:relative}
+.spectrum-marker{position:absolute;top:-6px;left:50%;width:20px;height:20px;background:var(--o);border:3px solid #fff;border-radius:50%;transform:translateX(-50%);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+
+/* Iceberg */
+.iceberg{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0}
+.ice-top{background:linear-gradient(135deg,var(--o),#e06510);border-radius:var(--radl);padding:2rem;color:#fff}
+.ice-top h4{font-weight:800;font-size:1.15rem;margin-bottom:.5rem}
+.ice-bottom{background:var(--nl);border-radius:var(--radl);padding:2rem;border:1px solid rgba(26,46,74,.1)}
+.ice-bottom h4{font-weight:800;font-size:1.15rem;color:var(--n);margin-bottom:.5rem}
+
+/* Section divider */
+.sdiv{height:6px;background:linear-gradient(to right,var(--o),var(--od),var(--o));opacity:.3}
+
+/* Scroll reveal */
+.rev{opacity:0;transform:translateY(25px);transition:opacity .6s ease,transform .6s ease}
+.rev.vis{opacity:1;transform:translateY(0)}
+
+/* Back to top */
+.btop{position:fixed;bottom:30px;right:30px;width:48px;height:48px;background:var(--o);border:none;border-radius:50%;color:#fff;font-size:1.4rem;cursor:pointer;z-index:300;opacity:0;visibility:hidden;transition:all .3s;box-shadow:0 4px 15px rgba(244,123,32,.4);display:flex;align-items:center;justify-content:center}
+.btop.show{opacity:1;visibility:visible}
+.btop:hover{background:var(--od);transform:translateY(-2px)}
+
+/* Orange strip */
+.ostrip{background:linear-gradient(135deg,var(--o),var(--od));padding:2.5rem 3rem;text-align:center}
+.ostrip p{color:#fff;font-size:1.3rem;font-weight:800;max-width:800px;margin:0 auto}
+
+/* Footer */
+footer{background:var(--n);padding:2rem 3rem;text-align:center}
+footer p{color:rgba(255,255,255,.5);font-size:.8rem}
+footer .fbrand{color:#fff;font-weight:800;font-size:1rem;margin-bottom:.3rem}
+footer .fbrand span{color:var(--o)}
+
+/* Responsive */
+@media(max-width:980px){
+section{padding:3rem 1.2rem}
+.hero{padding:3rem 1.2rem}
+.hero h1{font-size:2rem}
+.hstats{gap:1.5rem}
+.hstat .num{font-size:2rem}
+.g2,.g3,.g4{grid-template-columns:1fr}
+.iceberg{grid-template-columns:1fr}
+.dtree-branches{grid-template-columns:1fr}
+.flow{flex-direction:column;gap:1rem}
+.flow-arrow{transform:rotate(90deg)}
+nav{padding:0 1rem}
+.nlinks{gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nlinks a{font-size:.7rem;padding:5px 10px}
+.mtable{font-size:.8rem}
+.mtable th,.mtable td{padding:.7rem .8rem}
+.stit{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+
+<div class="pbar" id="pb">
+<svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="none" stroke="#fff" stroke-width="2"/><path d="M9 9l6 3-6 3V9z"/></svg>
+<span>Modo Apresentação</span>
+</div>
+
+<button class="pexit" id="pe">✕ Sair</button>
+
+<nav>
+<div class="nlogo"><span>Natural</span> — Blueprint de Vendas</div>
+<div class="nlinks">
+<a data-scroll="jornada">Jornada</a>
+<a data-scroll="corredor">Corredor</a>
+<a data-scroll="escuta">Escuta</a>
+<a data-scroll="filtro">Filtro</a>
+<a data-scroll="diagnostico">Diagnóstico</a>
+<a data-scroll="transicao">Transição</a>
+<a data-scroll="iceberg">Iceberg</a>
+<a data-scroll="termometro">Termômetro</a>
+<a data-scroll="demo">Demonstração</a>
+<a data-scroll="fechamento">Fechamento</a>
+<a data-scroll="flow">Flow</a>
+</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+<div class="hero-inner">
+<h1>O Blueprint de Vendas<br><span>Natural</span></h1>
+<p class="hsub">Do corredor à mesa de fechamento: Roteiro tático de atendimento e conversão no stand.</p>
+<div class="hstats">
+<div class="hstat"><div class="num">4</div><div class="lab">Etapas Críticas</div></div>
+<div class="hstat"><div class="num">1.000+</div><div class="lab">Itens em Linha</div></div>
+<div class="hstat"><div class="num">35</div><div class="lab">Anos de Mercado</div></div>
+</div>
+</div>
+</div>
+
+<!-- Ticker -->
+<div class="tick">
+<div class="ticki">
+<span>Corredor → Fronteira → Centro → Mesa</span>
+<span>Diagnostique rápido, apresente com energia</span>
+<span>Cada lead é uma oportunidade de negócio</span>
+<span>O paladar fecha vendas</span>
+<span>Não deixe o cliente sair com um "vou pensar"</span>
+<span>Especialistas em abertura de loja</span>
+<span>Mix com mais de 1.000 itens</span>
+<span>Entrega para todo o Brasil</span>
+<span>Corredor → Fronteira → Centro → Mesa</span>
+<span>Diagnostique rápido, apresente com energia</span>
+<span>Cada lead é uma oportunidade de negócio</span>
+<span>O paladar fecha vendas</span>
+<span>Não deixe o cliente sair com um "vou pensar"</span>
+<span>Especialistas em abertura de loja</span>
+<span>Mix com mais de 1.000 itens</span>
+<span>Entrega para todo o Brasil</span>
+</div>
+</div>
+
+<!-- SECTION 1: JORNADA ESPACIAL -->
+<section id="jornada" class="snav rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab" style="color:var(--o)">Visão Geral</div></div>
+<h2 class="stit">A Jornada Espacial do Stand: Do Corredor à Mesa</h2>
+<p class="sdesc">A venda na feira não é apenas conversa, é movimento físico. Seu objetivo é guiar o lead por 4 etapas críticas:</p>
+<div class="g4">
+<div class="dcard">
+<h4 style="color:var(--o)">1. A Abordagem</h4>
+<p><strong style="color:var(--o)">(O Corredor)</strong><br>Puxar a atenção de quem passa ou observa. O objetivo é criar contato.</p>
+</div>
+<div class="dcard">
+<h4 style="color:var(--o)">2. O Diagnóstico</h4>
+<p><strong style="color:var(--o)">(A Fronteira)</strong><br>Conexão, escuta ativa e qualificação rápida. O objetivo é trazer para dentro.</p>
+</div>
+<div class="dcard">
+<h4 style="color:var(--o)">3. A Demonstração</h4>
+<p><strong style="color:var(--o)">(O Centro do Stand)</strong><br>Apresentar diferenciais, volumetria e degustação. O objetivo é gerar desejo.</p>
+</div>
+<div class="dcard">
+<h4 style="color:var(--o)">4. O Fechamento</h4>
+<p><strong style="color:var(--o)">(A Mesa)</strong><br>Sentar, abrir o notebook e formalizar. O objetivo é fechar o pedido.</p>
+</div>
+</div>
+</div>
+</section>
+
+<div class="sdiv"></div>
+
+<!-- SECTION 2: O CORREDOR -->
+<section id="corredor" class="rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Etapa 1</div></div>
+<h2 class="stit">O Corredor — Ação de "Cara e Coragem"</h2>
+<p class="sdesc">O primeiro contato acontece no corredor. Existem dois cenários possíveis:</p>
+<div class="g2">
+<div class="card step-card">
+<h4>Cenário A: O Stand está vazio e o lead está passando</h4>
+<p style="margin-bottom:1rem"><strong>Ação:</strong> Proatividade total. Quebre a inércia e convide para entrar.</p>
+<div class="script-box">
+<div class="script-label">Roteiro</div>
+<p>"Olá, [bom dia / boa tarde]... Bora conhecer um pouco sobre a Natural?"</p>
+</div>
+</div>
+<div class="card step-card">
+<h4>Cenário B: O lead já parou e está observando a exposição</h4>
+<p style="margin-bottom:1rem"><strong>Ação:</strong> Aproveite a curiosidade já estabelecida.</p>
+<div class="script-box">
+<div class="script-label">Roteiro</div>
+<p>"Já conhece a Natural? Vamos conhecer comigo?"</p>
+</div>
+</div>
+</div>
+<div class="golden-rule">
+<div class="gr-label">★ Regra de Ouro ★</div>
+<p>A abordagem no corredor serve a um único propósito: interromper o fluxo do corredor e iniciar o contato.</p>
+</div>
+</div>
+</section>
+
+<!-- SECTION 3: ESCUTA ATIVA -->
+<section id="escuta" class="salt rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Etapa 2</div></div>
+<h2 class="stit">A Escuta Ativa e o Primeiro Contato</h2>
+<p class="sdesc">Caso o lead queira conhecer a Natural, execute estes 3 passos imediatamente:</p>
+<div class="g3">
+<div class="card step-card">
+<div class="step-num">1</div>
+<h4>A Conexão Física e Pessoal</h4>
+<p>A primeira ação é a apresentação imediata com contato físico.</p>
+<p style="margin-top:.8rem"><strong>Ação Crítica:</strong> Um aperto de mão firme (BEM IMPORTANTE).</p>
+<div class="script-box">
+<div class="script-label">Roteiro</div>
+<p>"Meu nome é [Seu Nome], sou consultor(a) de vendas e vocês, quem são?"</p>
+</div>
+</div>
+<div class="card step-card">
+<div class="step-num">2</div>
+<h4>A Regra do Nome</h4>
+<p>A partir deste momento, é <strong>obrigatório</strong> chamar o cliente pelo <strong>nome</strong> nas próximas tratativas.</p>
+<p style="margin-top:.8rem">Isso estabelece autoridade e proximidade no caos da feira.</p>
+</div>
+<div class="card step-card">
+<div class="step-num">3</div>
+<h4>O Gatilho de Qualificação</h4>
+<p>Imediatamente após a apresentação, dispare a pergunta que definirá todo o resto do seu atendimento:</p>
+<div class="accent-box" style="margin-top:1rem;padding:1.2rem 1.5rem">
+<p style="font-size:1.1rem;font-weight:800;text-align:center;opacity:1">"Você já conhece a Natural?"</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 4: FILTRO / ÁRVORE DE DECISÃO -->
+<section id="filtro" class="snav rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab" style="color:var(--o)">Árvore de Decisão</div></div>
+<h2 class="stit">O Filtro Inicial: A Árvore de Decisão</h2>
+<p class="sdesc">A resposta à pergunta "Você já conhece a Natural?" define dois caminhos completamente diferentes:</p>
+
+<div class="dtree">
+<div class="dtree-q"><p>"Você já conhece a Natural?"</p></div>
+<div class="dtree-arrow">▼</div>
+<div class="dtree-branches">
+<div class="dtree-branch yes">
+<h4>✓ Caminho A: SIM (Já conhece)</h4>
+<p style="margin-bottom:.8rem"><strong>Se for Cliente Ativo:</strong> Direcionar para o vendedor responsável. Peça para esperar um pouco, mostre as novidades e sente o cliente para aproveitar descontos da feira.</p>
+<p><strong>Se for Fornecedor:</strong> Direcionar para Camila ou Lenon. Se não estiverem, passar o contato telefônico do Marcio, Camila ou Lenon.</p>
+</div>
+<div class="dtree-branch no">
+<h4>✗ Caminho B: NÃO (Lead Novo)</h4>
+<p style="margin-bottom:1rem"><strong>Ação:</strong> Executar o Pitch de 30 Segundos.</p>
+<div class="dscript-box" style="background:rgba(244,123,32,.15)">
+<div class="script-label">O Script de Autoridade</div>
+<p>"Somos de Blumenau-SC, estamos no mercado já há 35 anos. Nosso foco hoje são produtos para granel e atendemos lojas, indústrias, redes hoteleiras, mercados e padarias. Somos especialistas em abertura de loja, e uma das maiores do mercado, com um mix de mais de 1.000 itens em linha."</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="accent-box" style="text-align:center;margin-top:2rem">
+<p style="font-size:1.05rem;font-weight:700;opacity:1">Após o pitch, avance imediatamente para a pergunta de diagnóstico: <strong>"Qual é o seu ramo?"</strong></p>
+</div>
+</div>
+</section>
+
+<div class="sdiv"></div>
+
+<!-- SECTION 5: DIAGNÓSTICO PRIMÁRIO -->
+<section id="diagnostico" class="rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Diagnóstico</div></div>
+<h2 class="stit">Matriz de Diagnóstico Primário: Lojas vs. Indústrias</h2>
+<p class="sdesc">A resposta sobre o ramo define como você conduz o restante do atendimento:</p>
+
+<div style="overflow-x:auto">
+<table class="mtable">
+<thead><tr><th>Foco</th><th>Se o ramo for: LOJA</th><th>Se o ramo for: INDÚSTRIA</th></tr></thead>
+<tbody>
+<tr><td><strong>A Reação</strong></td><td>"Nossa, que legal!"</td><td>"Ah, legal!" (Mostre interesse técnico)</td></tr>
+<tr><td><strong>Perguntas de Ouro (Tamanho/Local)</strong></td><td>"Aonde fica sua loja atualmente?" e "E quantas lojas você tem?"</td><td>"E vocês fabricam o quê?" e "Aonde fica a fábrica atualmente?"</td></tr>
+<tr><td><strong>Identificando o Decisor</strong></td><td>"As compras são com você mesmo?" (Sempre pergunte, mesmo lendo o crachá).</td><td>"As compras são com você mesmo?"</td></tr>
+<tr><td><strong>O Gatilho de Transição</strong></td><td>"Posso te apresentar um pouco dos nossos produtos?"</td><td>"Posso te apresentar um pouco do que tenho que sirva para o que você fabrica?"</td></tr>
+<tr class="highlight-row"><td><strong>Ação Física</strong></td><td>Arrastar o lead para dentro do stand e mostrar tudo.</td><td>Arrastar para o stand e focar em insumos (Ex: Se fabrica granola, focar em coco chips, castanhas, sucrilhos).</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- Diagnósticos Secundários -->
+<h3 style="font-size:1.5rem;font-weight:800;margin:3rem 0 1.5rem;color:var(--t)">Diagnósticos Secundários: Tratativas Rápidas</h3>
+<div class="g3">
+<div class="card step-card">
+<h4>🏪 Abertura de Loja</h4>
+<p><strong>Abordagem:</strong> "Como lhe informei, somos especialistas em abertura de loja."</p>
+<p style="margin-top:.5rem"><strong>Perguntas Rápidas:</strong> Já tem data de abertura? Já tem o local? Já trabalham no ramo?</p>
+<p style="margin-top:.5rem"><strong>Tática:</strong> Se necessário, chame a Julia para entrar na conversa e explicar o processo de abertura.</p>
+</div>
+<div class="card step-card">
+<h4>🍎 Nutricionistas</h4>
+<p><strong>Abordagem:</strong> Não perca tempo excessivo, mas seja estratégico.</p>
+<p style="margin-top:.5rem"><strong>Ação:</strong> Entenda se ela trabalha para/presta consultoria a algum supermercado (potencial contato B2B).</p>
+<p style="margin-top:.5rem"><strong>Se for apenas clínica:</strong> Explique os produtos brevemente, entregue um cartão e direcione para compras online.</p>
+</div>
+<div class="card step-card">
+<h4>🧩 Outros Ramos</h4>
+<p><strong>Abordagem:</strong> Adaptação instantânea.</p>
+<p style="margin-top:.5rem"><strong>Ação:</strong> Entenda rapidamente quais produtos da nossa linha se encaixam na realidade deles e direcione a conversa exclusivamente para esses itens.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 6: TRANSIÇÃO -->
+<section id="transicao" class="salt rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Transição</div></div>
+<h2 class="stit">A Transição: Trazendo para o Stand</h2>
+<p class="sdesc">O diagnóstico no corredor só tem um objetivo final: confirmar que você está falando com o decisor da compra e trazê-lo para o seu terreno.</p>
+
+<div class="accent-box" style="margin-bottom:2rem">
+<h4>"A Ação Física"</h4>
+<p>Após saber um pouco mais sobre o ramo, a empresa, e confirmar que ele é o decisor, arraste o cliente para dentro do stand.</p>
+</div>
+
+<div class="g3">
+<div class="card" style="border-left:4px solid var(--r)">
+<h4 style="color:var(--r)">✗ Não faça</h4>
+<p>Não apresente produtos no corredor.</p>
+</div>
+<div class="card" style="border-left:4px solid var(--g)">
+<h4 style="color:var(--g)">✓ Faça</h4>
+<p>Use as perguntas de transição da Matriz de Diagnóstico ("Posso te apresentar...") como o convite para caminharem juntos até a exposição.</p>
+</div>
+<div class="card" style="border-left:4px solid var(--o)">
+<h4 style="color:var(--o)">★ Prioridade</h4>
+<p>Lojas são os casos que mais fecham pedidos na feira: dedique atenção total quando confirmar esse perfil.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 7: ICEBERG -->
+<section id="iceberg" class="snav rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab" style="color:var(--o)">Etapa 3</div></div>
+<h2 class="stit">A Estratégia do Iceberg (Mix de Produtos)</h2>
+<p class="sdesc">Na feira, o cliente está vendo apenas a ponta do nosso portfólio. É vital comunicar nossa linha completa enquanto focamos no que gera curiosidade.</p>
+
+<div class="iceberg">
+<div class="ice-top">
+<h4>🔺 Os Diferenciais (A Ponta)</h4>
+<p style="margin-bottom:.5rem"><strong>O que é:</strong> O que trouxemos para a feira. Itens inovadores, tendências e diferenciais de mercado.</p>
+<p><strong>Objetivo:</strong> Chamar atenção, gerar desejo e fechar pedidos de novidades.</p>
+</div>
+<div class="ice-bottom">
+<h4>🔷 Produtos Curva A (A Base)</h4>
+<p style="margin-bottom:.5rem"><strong>O que é:</strong> Castanhas, aveias, nozes.</p>
+<div class="script-box">
+<div class="script-label">Roteiro</div>
+<p>"Aqui não costumamos trazer os produtos de curva A, porque isso todo mundo tem. Para a feira, trazemos diferenciais, mas reforço: temos uma linha completa de mais de 1.000 itens."</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="sdiv"></div>
+
+<!-- SECTION 8: TERMÔMETRO -->
+<section id="termometro" class="rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Adaptação</div></div>
+<h2 class="stit">O Termômetro da Conversa: Adaptando o Pitch</h2>
+<p class="sdesc">Identifique o perfil comportamental do cliente e adapte sua abordagem:</p>
+
+<div class="spectrum">
+<span class="spectrum-label" style="color:var(--n)">🤫 Observador (Calado)</span>
+<div class="spectrum-bar"><div class="spectrum-marker"></div></div>
+<span class="spectrum-label" style="color:var(--o)">🗣️ Comunicador (Tagarela)</span>
+</div>
+
+<div class="g2">
+<div class="card" style="border-top:4px solid var(--n)">
+<h4>O Cliente Observador (Calado)</h4>
+<p style="margin-bottom:1rem"><strong>Dinâmica:</strong> Você precisa extrair as informações guiando a conversa.</p>
+<p style="font-weight:700;margin-bottom:.5rem">Roteiros Diretos:</p>
+<p>• "Esse tipo de produto tem na sua loja?"</p>
+<p>• "O que você costuma vender mais?"</p>
+<p>• "Esse produto aqui está muito em alta, vendo bastante para lojistas... já conhece?"</p>
+</div>
+<div class="card" style="border-top:4px solid var(--o)">
+<h4>O Cliente Comunicador (Tagarela)</h4>
+<p style="margin-bottom:1rem"><strong>Dinâmica:</strong> Escuta ativa estratégica.</p>
+<p style="margin-bottom:.5rem"><strong>Ação:</strong> Deixe o cliente falar o máximo possível. Mapeie mentalmente:</p>
+<p>1. O que ele mais gosta de comprar.</p>
+<p>2. O que mais sai na loja dele.</p>
+<p>3. O que chamou a atenção dele na nossa exposição.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 9: DEMONSTRAÇÃO -->
+<section id="demo" class="salt rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Demonstração</div></div>
+<h2 class="stit">Táticas de Demonstração: Degustação, Volumetria e Logística</h2>
+<p class="sdesc">Três armas poderosas para converter interesse em pedido:</p>
+
+<div class="g3">
+<div class="card step-card">
+<div class="step-num">🍽️</div>
+<h4>O Poder da Degustação</h4>
+<p>Caso o cliente demonstre interesse claro em algum produto e tenhamos a opção de degustação disponível, <strong>não hesite: traga o produto para ele experimentar imediatamente.</strong></p>
+<div class="accent-box" style="padding:1rem 1.2rem;margin-top:1rem"><p style="font-weight:800;text-align:center;opacity:1">O paladar fecha vendas.</p></div>
+</div>
+<div class="card step-card">
+<div class="step-num">📦</div>
+<h4>A Flexibilidade da Volumetria</h4>
+<div class="script-box" style="margin-bottom:1rem">
+<div class="script-label">Script Obrigatório</div>
+<p>"Vendemos em sacas ou caixas, mas também em pacotes de 1kg ou 500g, dependendo do produto."</p>
+</div>
+<p><strong>O Argumento de Venda:</strong> Essa flexibilidade facilita a compra de itens com menor giro (Exemplo prático: Kiwi Glaceado, que usa muito pouco, não precisa ser comprado em saca).</p>
+</div>
+<div class="card step-card">
+<div class="step-num">🚚</div>
+<h4>Logística e Entrega</h4>
+<p>Se houver interesse de compra, antecipe a solução técnica: explique imediatamente que fornecemos para todo o Brasil e detalhe como funcionam nossos despachos e fretes hoje.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION 10: FECHAMENTO -->
+<section id="fechamento" class="snav rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab" style="color:var(--o)">Etapa 4</div></div>
+<h2 class="stit">O Fechamento (A Hora da Verdade)</h2>
+<p class="sdesc">Após apresentar os produtos e cativar o cliente, o objetivo final no stand é sentar e formalizar. A transição deve ser natural, rápida e focada nos benefícios exclusivos da feira.</p>
+
+<div class="dscript-box" style="margin-bottom:2.5rem">
+<div class="script-label">O Roteiro de Transição</div>
+<p>"Vamos sentar comigo aqui rapidinho pra gente fazer um cadastro e já fazer um pedido pra aproveitar esses descontos especiais de feira?"</p>
+</div>
+
+<div class="g2">
+<!-- Cliente Novo -->
+<div class="dcard">
+<h4 style="color:var(--o);font-size:1.2rem">Estratégia: Cliente Novo</h4>
+<p style="margin-bottom:1rem">O cliente sentou? Siga o protocolo de hospitalidade comercial: Pegue o notebook, ofereça água ou degustação enquanto ele espera, faça o cadastro e vá lançando o pedido junto com ele (eles gostam de ditar os itens visualizando o stand).</p>
+<div style="background:rgba(244,123,32,.15);border-radius:var(--rad);padding:1.2rem;margin-bottom:1rem">
+<p style="color:var(--o);font-weight:800;margin-bottom:.4rem">O "Pedido de Novidades" (Em caso de relutância)</p>
+<p>Se o cliente relutar em fazer um pedido completo, reduza o atrito:</p>
+<div class="dscript-box" style="margin-top:.8rem;background:rgba(244,123,32,.2)">
+<div class="script-label">Roteiro</div>
+<p>"Olha, a maioria dos clientes que fecham conosco aqui fazem um pedido só de novidades para a loja. Podemos fazer isso também para você conhecer nossos produtos, o que acha?"</p>
+</div>
+</div>
+<p><strong style="color:var(--o)">Tactical Reminders:</strong></p>
+<p>• <strong>Descontos Progressivos:</strong> Mencione-os sempre. Muitas vezes os clientes aumentam a quantidade na hora ao saber da vantagem.</p>
+<p>• <strong>Pós-Fechamento:</strong> Prepare uma sacola com brindes para ele levar e avise que entrará em contato em seguida para formalizar.</p>
+</div>
+
+<!-- Cliente Ativo -->
+<div class="dcard">
+<h4 style="color:var(--o);font-size:1.2rem">Estratégia: Cliente Ativo</h4>
+<p style="margin-bottom:1rem">A psicologia do cliente ativo na feira é diferente. A maior parte deles vai ao evento com uma missão clara: aproveitar ao máximo os descontos comerciais.</p>
+<div style="background:rgba(244,123,32,.08);border-radius:var(--rad);padding:1.2rem;margin-bottom:.5rem">
+<p style="margin-bottom:.8rem"><strong style="color:var(--o)">Foco no Volume Máximo:</strong> O ideal é pedir para o cliente comprar a maior quantidade de itens e volumetria que ele conseguir absorver, ancorando sempre na oportunidade do "preço de feira".</p>
+<p style="margin-bottom:.8rem"><strong style="color:var(--o)">A Ponte para Inovação:</strong> Não venda apenas o que ele já compra (Curva A). É mandatório incluir no pedido dele alguma das novidades que você apresentou durante o passeio pelo stand.</p>
+<p><strong style="color:var(--o)">Reconhecimento:</strong> Trate-o com a prioridade de quem já confia na marca Natural.</p>
+</div>
+</div>
+</div>
+
+<div class="golden-rule" style="margin-top:2.5rem">
+<div class="gr-label">★ Alerta ★</div>
+<p>Não deixe o cliente sair com um "vou pensar". O ambiente da feira exige ação imediata baseada na oportunidade temporal dos descontos.</p>
+</div>
+</div>
+</section>
+
+<!-- Orange strip -->
+<div class="ostrip">
+<p>Diagnostique rápido, apresente os diferenciais com energia, e leve-os para a mesa.</p>
+</div>
+
+<!-- SECTION 11: FLOW PERFEITO -->
+<section id="flow" class="rev">
+<div class="sinner">
+<div class="seyb"><div class="bar"></div><div class="lab">Cheat Sheet</div></div>
+<h2 class="stit">O Flow Perfeito: Seu Cheat Sheet de Conversão</h2>
+<p class="sdesc">Memorize este caminho. Da abordagem de "cara e coragem" no corredor até a formalização do pedido no notebook. Cada cliente que cruza a linha pontilhada do nosso stand é uma oportunidade de negócio.</p>
+
+<div class="flow">
+<div class="flow-step">
+<h4>Corredor</h4>
+<p>"Bora conhecer?"</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<h4>Fronteira</h4>
+<p>Aperto de mão<br>"Já conhece?"<br>Diagnóstico (Loja/Indústria)</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step">
+<h4>Centro</h4>
+<p>Arrasta pro stand<br>Termômetro de Conversa<br>Iceberg (Diferenciais)<br>Degustação</p>
+</div>
+<div class="flow-arrow">→</div>
+<div class="flow-step" style="border-color:var(--o);background:linear-gradient(135deg,var(--n),var(--nm))">
+<h4 style="color:var(--o)">Mesa ✓</h4>
+<p>"Vamos sentar rapidinho?"<br>Água/Notebook<br>Pedido Novidades/Volume</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="fbrand"><span>Natural</span> — Blueprint de Vendas</div>
+<p>Material exclusivo para treinamento da equipe comercial.</p>
+</footer>
+
+<!-- Back to top -->
+<button class="btop" aria-label="Voltar ao topo">↑</button>
+
+<script>
+// Smooth scroll navigation
+document.addEventListener("click",function(e){
+var t=e.target.closest("[data-scroll]");
+if(!t)return;
+e.preventDefault();
+var el=document.getElementById(t.getAttribute("data-scroll"));
+if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.pageYOffset-100,behavior:"smooth"});
+});
+
+// Back to top
+document.querySelector(".btop").addEventListener("click",function(){
+window.scrollTo({top:0,behavior:"smooth"});
+});
+
+// Scroll reveal
+var obs=new IntersectionObserver(function(e){
+e.forEach(function(x){if(x.isIntersecting)x.target.classList.add("vis")});
+},{threshold:.06,rootMargin:"0px 0px -30px 0px"});
+document.querySelectorAll(".rev").forEach(function(el){obs.observe(el)});
+
+// Back to top visibility + progress
+window.addEventListener("scroll",function(){
+document.querySelector(".btop").classList.toggle("show",window.scrollY>400);
+var h=document.documentElement.scrollHeight-window.innerHeight;
+if(h>0)document.getElementById("prog").style.width=(window.scrollY/h*100)+"%";
+});
+
+// Active nav link
+var secs=document.querySelectorAll("section[id]");
+var nls=document.querySelectorAll(".nlinks a");
+window.addEventListener("scroll",function(){
+var c="";
+secs.forEach(function(s){if(window.scrollY>=s.offsetTop-140)c=s.getAttribute("id")});
+nls.forEach(function(l){l.classList.toggle("on",l.getAttribute("data-scroll")===c)});
+});
+
+// Presentation mode
+document.getElementById("pb").addEventListener("click",function(){
+document.body.classList.add("pmode");
+window.scrollTo({top:0});
+if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
+});
+document.getElementById("pe").addEventListener("click",function(){
+document.body.classList.remove("pmode");
+if(document.exitFullscreen)document.exitFullscreen();
+});
+document.addEventListener("keydown",function(e){
+if(e.key==="Escape")document.body.classList.remove("pmode");
+});
+</script>
+</body>
+</html>
